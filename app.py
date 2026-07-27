@@ -18,10 +18,8 @@ from werkzeug.utils import secure_filename
 from werkzeug.exceptions import RequestEntityTooLarge
 
 BASE_DIR = Path(__file__).resolve().parent
+DATA_DIR = BASE_DIR / "data"
 MAPPINGS_DIR = BASE_DIR / "mappings"
-
-# Persistent Volume Path for Railway (/app/data)
-DATA_DIR = Path("/app/data") if Path("/app/data").exists() or os.getenv("RAILWAY_ENVIRONMENT") else BASE_DIR / "data"
 
 OUTPUT_DIR = DATA_DIR / "output_docs"
 OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
@@ -1456,7 +1454,6 @@ def open_browser():
 if __name__ == "__main__":
     print("\nTamil DOCX Font Converter")
     print(f"Folder: {BASE_DIR}")
-    print(f"Data Dir: {DATA_DIR}")
     print(f"Mappings: {MAPPINGS_DIR}")
     print("Open: http://127.0.0.1:5000")
     print("Mode: build mappings from *_to_unicode.js, convert legacy↔unicode and legacy↔legacy via Unicode pivot")
