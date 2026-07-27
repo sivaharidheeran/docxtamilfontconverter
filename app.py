@@ -20,14 +20,15 @@ from werkzeug.exceptions import RequestEntityTooLarge
 BASE_DIR = Path(__file__).resolve().parent
 MAPPINGS_DIR = BASE_DIR / "mappings"
 
-# Check if Railway's /data volume exists; otherwise, fallback to local BASE_DIR
-DATA_ROOT = Path("/data") if Path("/data").exists() else BASE_DIR
+# Check for Railway persistent volume at /data, fallback to local BASE_DIR for local testing
+RAILWAY_DATA_DIR = Path("/data")
+STORAGE_DIR = RAILWAY_DATA_DIR if RAILWAY_DATA_DIR.exists() else BASE_DIR
 
-OUTPUT_DIR = DATA_ROOT / "output_docs"
+OUTPUT_DIR = STORAGE_DIR / "output_docs"
 OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
 
 # Directory to store user uploaded files
-UPLOADS_DIR = DATA_ROOT / "uploads"
+UPLOADS_DIR = STORAGE_DIR / "uploads"
 UPLOADS_DIR.mkdir(parents=True, exist_ok=True)
 
 W_NS = "http://schemas.openxmlformats.org/wordprocessingml/2006/main"
@@ -305,6 +306,7 @@ def convert_text_best_parse(text, mapping, match_index=None):
         i = state["next_i"]
 
     return "".join(out)
+
 
 def reverse_mapping_first_wins(mapping):
     rev = {}
@@ -1456,7 +1458,7 @@ def open_browser():
 if __name__ == "__main__":
     print("\nTamil DOCX Font Converter")
     print(f"Folder: {BASE_DIR}")
-    print(f"Data Dir: {DATA_ROOT}")
+    print(f"Storage Folder: {STORAGE_DIR}")
     print(f"Mappings: {MAPPINGS_DIR}")
     print("Open: http://127.0.0.1:5000")
     print("Mode: build mappings from *_to_unicode.js, convert legacy↔unicode and legacy↔legacy via Unicode pivot")
